@@ -15,12 +15,15 @@ def parseData(argsData):
 
 def csvHeaders():
   out = []
+  out.append("Time")
   for d in data:
     out.append(d['title'])
   return out
 
 def csvRow():
   out = []
+  time = datetime.datetime.now() - start  
+  out.append(time.seconds + time.microseconds / 1000000)
   for d in data:
     out.append(str(lib.ftdimut_getData(int(d['request'], 0))))
   return out
@@ -46,9 +49,11 @@ if(os.path.exists(args.output)):
 lib.ftdimut_setup()
 lib.ftdimut_init()
 
+start = datetime.datetime.now()
+
 import csv
 with open(args.output, 'w', newline='') as csvfile:
-  spamwriter = csv.writer(csvfile, delimiter=' ',
+  spamwriter = csv.writer(csvfile, delimiter=',',
                           quotechar='|', quoting=csv.QUOTE_MINIMAL)
   spamwriter.writerow(csvHeaders())
   try:
