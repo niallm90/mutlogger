@@ -46,8 +46,23 @@ if(os.path.exists(args.output)):
   print("Output file exists!")
   exit(2)
 
-lib.ftdimut_setup()
-lib.ftdimut_init()
+ftStatus = lib.ftdimut_setup()
+if ftStatus != 0:
+  if ftStatus == 2:
+    print("Device not found.")
+  if ftStatus == 3:
+    print("Cannot open device.")
+  else:
+    print("Unknown error.")
+  exit(2)
+
+ftStatus = 1
+while ftStatus != 0:
+  ftStatus = lib.ftdimut_init()
+
+
+print("Connected")
+print("Logging to %s" % args.output)
 
 start = datetime.datetime.now()
 
